@@ -21,7 +21,7 @@ export const useSarcasmDetection = () => {
       setIsModelLoading(true);
       pipelineRef.current = await pipeline(
         'text-classification',
-        'mrm8488/distilroberta-finetuned-tweets-hate-speech',
+        'Xenova/distilbert-base-uncased-finetuned-sst-2-english',
         { device: 'webgpu' }
       );
       setIsModelLoading(false);
@@ -50,8 +50,8 @@ export const useSarcasmDetection = () => {
       const output = await pipelineRef.current(text);
       const topResult = output[0];
       
-      // Interpret results: higher score for "HATE" label could indicate sarcasm/irony
-      const isSarcastic = topResult.label === 'HATE' && topResult.score > 0.5;
+      // Interpret results: NEGATIVE sentiment with high confidence may indicate sarcasm
+      const isSarcastic = topResult.label === 'NEGATIVE' && topResult.score > 0.65;
       
       setResult({
         label: isSarcastic ? 'Sarcastic' : 'Not Sarcastic',
